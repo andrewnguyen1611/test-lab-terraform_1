@@ -68,14 +68,16 @@ provider "aws" {
           vpc_id            = aws_vpc.my_vpc_1.id
           cidr_block        = local.public[count.index]
           availability_zone = local.zone[count.index % length(local.zone)]
-
-          tags = {
+         
+              tags = {
             "Name" = var.name_pub_sub[count.index]
           }
         }
 
-#         # tạo subnet cho vpc2 
 
+
+
+#         # tạo subnet cho vpc2 
 #         # locals {
 #         #   public2 = ["20.0.1.0/24"]
 #         #   zone2   = ["us-east-1a"]
@@ -117,12 +119,36 @@ provider "aws" {
             cidr_block = "0.0.0.0/0"
             gateway_id = aws_internet_gateway.ig.id
           }
-
+        
           tags = {
             "Name" = "public"
           }
         }
 
+
+        resource "aws_route_table" "private" {
+                  vpc_id = aws_vpc.my_vpc_1.id
+
+                  route {
+                    cidr_block = "0.0.0.0/0"
+                    gateway_id = aws_nat_gateway.public.id
+                  }
+
+                  tags = {
+                    "Name" = "private"
+                  }
+                }
+
+
+#     resource "aws_route_table_association" "for_public" {
+#          subnet_id      = [aws_subnet.public_subnet.id]
+#         route_table_id = aws_route_table.public1.id
+#     }
+
+# resource "aws_route_table_association" "for_private" {
+#          subnet_id      = [aws_subnet.private_subnet.id]
+#         route_table_id = aws_route_table.private.id
+#     }
 
 # resource "aws_route_table" "public2" {
 #   vpc_id = aws_vpc.my_vpc_2.id
@@ -146,7 +172,6 @@ provider "aws" {
 
         resource "aws_nat_gateway" "public" {
           depends_on = [aws_internet_gateway.ig]
-
           allocation_id = aws_eip.nat.id
           subnet_id     = aws_subnet.public_subnet[0].id
           tags = {
@@ -155,22 +180,7 @@ provider "aws" {
         }
 
 
-        resource "aws_route_table" "private" {
-          vpc_id = aws_vpc.my_vpc_1.id
-
-          route {
-            cidr_block = "0.0.0.0/0"
-            gateway_id = aws_nat_gateway.public.id
-          }
-
-          tags = {
-            "Name" = "private"
-          }
-        }
-
-
-
-#tạo loadbalacing
+       #tạo loadbalacing
         resource "aws_security_group" "webapp" {
           vpc_id = aws_vpc.my_vpc_1.id
           name   = "Web Server Security Group"
