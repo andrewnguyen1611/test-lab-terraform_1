@@ -197,6 +197,7 @@ provider "aws" {
         availability_zone      = local.zone[1]
         vpc_security_group_ids = [aws_security_group.webapp.id]
         subnet_id              = aws_subnet.public_subnet[1].id
+        associate_public_ip_address = true
         tags = {
           "Name" = "web"
         }
