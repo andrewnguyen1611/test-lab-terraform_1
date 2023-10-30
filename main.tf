@@ -19,19 +19,19 @@ provider "aws" {
         enable_dns_hostnames = true
 
         tags = {
-          "Name" = "VLU_VPC"
+          "Name" = "Customer_VPC"
         }
       }
 
 
 # tạo subnet 
         variable "name_pri_sub" {
-        default = ["VLU_private-subnet-01","VLU_private-subnet-02","VLU_private-subnet-03","VLU_private-subnet-04"]
+        default = ["Customer_private-subnet-01","Customer_private-subnet-02","Customer_private-subnet-03","Customer_private-subnet-04"]
         type = list(string)
         }
 
         variable "name_pub_sub" {
-        default = ["VLU_public-subnet-01","VLU_public-subnet-02"]
+        default = ["Customer_public-subnet-01","Customer_public-subnet-02"]
         type = list(string)
         }
 
