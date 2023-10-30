@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 
-# tạo VPC
+# Create VPC
 
       resource "aws_vpc" "my_vpc_1" {
         cidr_block           = "10.0.0.0/16"
@@ -24,7 +24,7 @@ provider "aws" {
       }
 
 
-# tạo subnet 
+# Create Subnet 
         variable "name_pri_sub" {
         default = ["Customer_private-subnet-01","Customer_private-subnet-02","Customer_private-subnet-03","Customer_private-subnet-04"]
         type = list(string)
@@ -64,7 +64,7 @@ provider "aws" {
           }
         }
 
-#tạo security
+#Create security Group
         resource "aws_security_group" "SG" {
           vpc_id = aws_vpc.my_vpc_1.id
           name   = "Web Server Security Group"
@@ -81,20 +81,20 @@ provider "aws" {
             cidr_blocks = ["0.0.0.0/0"]
           }
            tags = {
-                    "Name" = "VLU_securitygroup"
+                    "Name" = "Customer_securitygroup"
         }
         }
 
-# # tạo internet gateway
+# # Create internet gateway
         resource "aws_internet_gateway" "ig" {
           vpc_id = aws_vpc.my_vpc_1.id
 
           tags = {
-            "Name" = "VLU_ig1"
+            "Name" = "Customer_ig1"
           }
         }
 
-#tạo natgateway
+#Create Natgateway
 
         resource "aws_eip" "nat" {
           vpc = true
@@ -109,7 +109,7 @@ provider "aws" {
           }
         }
 
-# #tạo routetable
+# #Create routetable
         resource "aws_route_table" "public" {
           vpc_id = aws_vpc.my_vpc_1.id
 
